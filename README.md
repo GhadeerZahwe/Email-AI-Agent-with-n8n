@@ -18,38 +18,6 @@ The **Email Agent Workflow Assistant** is designed to:
 
 ---
 
-## 🧪 Testing Guide
-
-1. **Ask about AI impact** → Expect research-based reply.  
-<img width="1620" height="850" alt="a1" src="https://github.com/user-attachments/assets/7ae2be8c-e3cd-42cf-b7c2-4d2ac86a7fd0" />
-<img width="1597" height="855" alt="a2" src="https://github.com/user-attachments/assets/31e0ab59-bbba-48c0-bd58-d84e9bcab3f3" />
-
-2. **Request resources** → Agent performs **live web search** via Perplexity.  
-<img width="1607" height="862" alt="a3" src="https://github.com/user-attachments/assets/9cb24194-5897-440b-996a-47902e6e7ee4" />
-
-3. **Book meeting** → Suggests working-hour slots, creates event.  
-<img width="1615" height="808" alt="a4" src="https://github.com/user-attachments/assets/2cbd7294-5de5-44b9-a5ae-2c72c8134e54" />
-
-4. **Confirm meeting** → Event saved in Google Calendar.  
-<img width="1615" height="622" alt="a5" src="https://github.com/user-attachments/assets/4875edcd-456e-4658-ab86-0e93d83e4331" />
-<img width="1599" height="706" alt="a6" src="https://github.com/user-attachments/assets/3a7d5313-94ec-4ea3-af2c-cd0c6f3ec11d" />
-
-5. **Update meeting** → Reschedules successfully.  
-<img width="1611" height="804" alt="a7" src="https://github.com/user-attachments/assets/b882d1a3-e9de-4124-b87a-b8a988b1b24c" />
-<img width="1617" height="804" alt="a8" src="https://github.com/user-attachments/assets/0709dbe2-8870-450e-b261-b516de296ca3" />
-
-6. **Cancel meeting** → Removes event from Calendar.  
-<img width="1618" height="662" alt="a9" src="https://github.com/user-attachments/assets/cf6cf7b6-6133-4898-8ad3-807e9e7345d1" />
-<img width="1613" height="806" alt="a10" src="https://github.com/user-attachments/assets/75d97bc6-26c8-4b08-bbe9-d911cca2bb26" />
-
-7. **Boundary Test**: ask for Sunday / 7 PM → Agent rejects & suggests alternatives.  
-<img width="1598" height="850" alt="a12" src="https://github.com/user-attachments/assets/83685f66-ab97-4951-8dfe-eaa36ad77f03" />
-
-8. **Privacy Test**: ask for attendees → Agent refuses politely.  
-<img width="1612" height="757" alt="a11" src="https://github.com/user-attachments/assets/dfebff43-514a-481b-a86e-73c1999e1e43" />
-
----
-
 ## 🛠️ Technology Stack
 
 - **[n8n](https://n8n.io/)** → Workflow automation engine.  
@@ -133,6 +101,38 @@ The **Email Agent Workflow Assistant** is designed to:
 
 ---
 
+
+## 🧪 Testing Guide
+
+1. **Ask about AI impact** → Expect research-based reply.  
+<img width="1620" height="850" alt="a1" src="https://github.com/user-attachments/assets/7ae2be8c-e3cd-42cf-b7c2-4d2ac86a7fd0" />
+<img width="1597" height="855" alt="a2" src="https://github.com/user-attachments/assets/31e0ab59-bbba-48c0-bd58-d84e9bcab3f3" />
+
+2. **Request resources** → Agent performs **live web search** via Perplexity.  
+<img width="1607" height="862" alt="a3" src="https://github.com/user-attachments/assets/9cb24194-5897-440b-996a-47902e6e7ee4" />
+
+3. **Book meeting** → Suggests working-hour slots, creates event.  
+<img width="1615" height="808" alt="a4" src="https://github.com/user-attachments/assets/2cbd7294-5de5-44b9-a5ae-2c72c8134e54" />
+
+4. **Confirm meeting** → Event saved in Google Calendar.  
+<img width="1615" height="622" alt="a5" src="https://github.com/user-attachments/assets/4875edcd-456e-4658-ab86-0e93d83e4331" />
+<img width="1599" height="706" alt="a6" src="https://github.com/user-attachments/assets/3a7d5313-94ec-4ea3-af2c-cd0c6f3ec11d" />
+
+5. **Update meeting** → Reschedules successfully.  
+<img width="1611" height="804" alt="a7" src="https://github.com/user-attachments/assets/b882d1a3-e9de-4124-b87a-b8a988b1b24c" />
+<img width="1617" height="804" alt="a8" src="https://github.com/user-attachments/assets/0709dbe2-8870-450e-b261-b516de296ca3" />
+
+6. **Cancel meeting** → Removes event from Calendar.  
+<img width="1618" height="662" alt="a9" src="https://github.com/user-attachments/assets/cf6cf7b6-6133-4898-8ad3-807e9e7345d1" />
+<img width="1613" height="806" alt="a10" src="https://github.com/user-attachments/assets/75d97bc6-26c8-4b08-bbe9-d911cca2bb26" />
+
+7. **Boundary Test**: ask for Sunday / 7 PM → Agent rejects & suggests alternatives.  
+<img width="1598" height="850" alt="a12" src="https://github.com/user-attachments/assets/83685f66-ab97-4951-8dfe-eaa36ad77f03" />
+
+8. **Privacy Test**: ask for attendees → Agent refuses politely.  
+<img width="1612" height="757" alt="a11" src="https://github.com/user-attachments/assets/dfebff43-514a-481b-a86e-73c1999e1e43" />
+
+---
 ## 📜 Notes on Workflow
 
 - Workflow **triggers automatically** on incoming email (via Gmail Trigger / IMAP).  
