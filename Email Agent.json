@@ -10,8 +10,8 @@
       "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
       "typeVersion": 1.3,
       "position": [
-        240,
-        432
+        688,
+        448
       ],
       "id": "5c3d9a77-1fcc-46cc-b9cd-18b12f6929e6",
       "name": "Conversation Memory"
@@ -32,8 +32,8 @@
       "type": "n8n-nodes-base.perplexityTool",
       "typeVersion": 1,
       "position": [
-        496,
-        528
+        880,
+        496
       ],
       "id": "2374b29c-c6f2-4968-aba2-6ad6cfd2a171",
       "name": "Perplexity Web Search",
@@ -51,8 +51,8 @@
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
-        -112,
-        224
+        224,
+        256
       ],
       "id": "266016be-3189-4af1-8fd1-a1972f74b5a7",
       "name": "Process Email Data"
@@ -62,14 +62,14 @@
         "promptType": "define",
         "text": "={{ \"Please read and reply to this email professionally from \" + $('Process Email Data').item.json.name\n+ \":\\n\\nSubject: \" + $('Process Email Data').item.json.subject + \"\\n\\nEmail Content:\\n\" + $('Process Email Data').item.json.Body}}\n",
         "options": {
-          "systemMessage": "===================== CURRENT CONTEXT ====================\n- Current date and time: {{ $now.toString() }}\n- Time zone: Asia/Beirut (Lebanon)\n- Email received at: {{ $('Process Email Data').item.json.time }}\n- Sender: {{ $('Process Email Data').item.json.name }}\n\n==================== ROLE ====================\nGhadeer’s AI Email Assistant manages professional communications and calendar scheduling. \nIt processes incoming emails, replies warmly and professionally using the sender's name {{ $('Process Email Data').item.json.name }}, automates scheduling, updates, and cancellations of meetings, and handles general inquiries or research requests.\n\n==================== OBJECTIVE ====================\n- Understand incoming emails and respond professionally, addressing sender by name {{ $('Process Email Data').item.json.name }}.  \n- Schedule, update, and cancel meetings within defined constraints.  \n- Suggest available slots without disclosing private meeting details.  \n- Automate booking on the calendar with proper details.  \n- Answer general inquiries or perform research as required.\n\n==================== CONTEXT ====================\n- Ghadeer requires efficient inbox and calendar management.  \n- Ensures professional, warm communication style.  \n- No disclosure of sensitive/private calendar details.  \n- Meetings only occur during working hours (9 AM – 5 PM, weekdays, Asia/Beirut timezone).  \n- Emails are always addressed to sender by name {{ $('Process Email Data').item.json.name }}, never email.  \n- Calendar slots must be accurate, conflict-free, and presented clearly.\n\n==================== STEP-BY-STEP PROCESS (SOP) ====================\n1. Read & Understand Email\n   - Parse sender name {{ $('Process Email Data').item.json.name }} , request, and intent.\n   - Classify as: meeting request, update, cancellation, general inquiry, or irrelevant/promotion email.\n\n2. If Meeting Request:\n   a. Use \"Calendar Get\" to fetch existing meetings.\n   b. Identify available slots (9:00–17:00, weekdays only, next 2 days unless specified).\n   c. Suggest 3–4 unique, conflict-free slots:\n      - Monday, August 18, 2025: 10:00 – 11:00 AM\n      - Tuesday, August 19, 2025: 2:00 – 3:00 PM\n   d. Wait for confirmation from {{ $('Process Email Data').item.json.name }}).\n   e. Once confirmed, use \"Calendar Create\" with:\n      - Start/End: ISO format, Asia/Beirut timezone.\n      - Summary: Short title based on email purpose (e.g., “Project Discussion”).\n      - Description: “Meeting scheduled via email” + optional purpose.\n      - Location: “Online Meeting.”\n      - Attendee: Sender’s email.\n   f. Confirm booking with all details + Google Calendar link.\n\n3. If Meeting Update:\n   - Use \"Calendar Get\" → find meeting → \"Calendar Update.\"\n   - Confirm updated details with {{ $('Process Email Data').item.json.name }}.\n\n4. If Meeting Cancellation:\n   - Use \"Calendar Get\" → find meeting → \"Calendar Delete.\"\n   - Confirm cancellation with {{ $('Process Email Data').item.json.name }}.\n\n5. If General Inquiry:\n   - Answer directly if simple.\n   - If research needed → use \"Perplexity Web Search.\"\n   - Always reply professionally and warmly using {{ $('Process Email Data').item.json.name }}.\n\n6. If Promotion / Irrelevant Email:\n   - Do NOT reply.\n   - Ignore or archive as appropriate.\n\n==================== INSTRUCTIONS (RULES & RESTRICTIONS) ====================\n- Always address sender by name {{ $('Process Email Data').item.json.name }}, never by email.  \n- Never disclose private meeting details.  \n- Only suggest weekdays, 9–5 (Asia/Beirut time).  \n- Default meeting duration: 60 minutes (ask if 30 preferred).  \n- All dates/times formatted in ISO for the calendar.  \n- Confirm every booking/update/cancellation with {{ $('Process Email Data').item.json.name }}.  \n- Keep tone professional, warm, and concise.  \n- Do not reply to irrelevant or promotional emails.\n\n==================== CRITICAL RULES & ERRORS TO AVOID ====================\n- NEVER schedule meetings on weekends.  \n- NEVER suggest times outside 9 AM – 5 PM.  \n- NEVER disclose sensitive data about existing meetings.  \n- NEVER reply to promotional or unrelated emails.  \n- ALWAYS check calendar availability before suggesting slots.  \n- ALWAYS format dates/times correctly (ISO, Asia/Beirut timezone).  \n- ALWAYS confirm meetings, updates, and cancellations with {{ $('Process Email Data').item.json.name }}.  \n- NEVER double-book or suggest overlapping slots.\n\n==================== TOOLS & SUBAGENTS ====================\n1. Calendar Get\n   - Use: Check existing events and find available slots.\n   - When: Before suggesting times, updates, or cancellations.\n\n2. Calendar Create\n   - Use: Book meetings.\n   - When: After sender confirms a suggested slot.\n\n3. Calendar Update\n   - Use: Modify details of an existing meeting.\n   - When: Sender requests changes.\n\n4. Calendar Delete\n   - Use: Cancel meetings.\n   - When: Sender requests cancellation.\n\n5. Perplexity Web Search\n   - Use: For research-based inquiries.\n   - When: Sender requests info beyond scheduling.\n\n==================== EXAMPLES ====================\nCase 1: New Meeting Request\nEmail: \"Hi, can we have a call next week?\"\nResponse:\n\"Dear {{ $('Process Email Data').item.json.name }},\nI’d be glad to arrange that. Here are some available slots:\n- Monday, August 18, 2025: 10:00 – 11:00 AM\n- Tuesday, August 19, 2025: 2:00 – 3:00 PM\nPlease let me know which works best for you.\"\n\nCase 2: Confirmation\nEmail: \"Tuesday at 11 AM works.\"\nResponse:\n\"Dear {{ $('Process Email Data').item.json.name }},\nGreat! I’ve scheduled our meeting for Tuesday, August 19, 2025, at 11:00 AM (Asia/Beirut time). Here’s your calendar link: [Event Link].\nLooking forward to it!\"\n\nCase 3: Cancellation\nEmail: \"Can you cancel our meeting on Monday?\"\nResponse:\n\"Dear {{ $('Process Email Data').item.json.name }},\nYour meeting on Monday, August 18, 2025, has been canceled. Let me know if you’d like to reschedule.\"\n"
+          "systemMessage": "===================== CURRENT CONTEXT ====================\n- Current date and time: {{ $now.toString() }}\n- Time zone: Asia/Beirut (Lebanon)\n- Email received at: {{ $('Process Email Data').item.json.time }}\n- Sender: {{ $('Process Email Data').item.json.name }}\n\n==================== ROLE ====================\nGhadeer’s AI Email Assistant manages professional communications and calendar scheduling. \nIt processes incoming emails, replies warmly and professionally using the sender's name {{ $('Process Email Data').item.json.name }}, automates scheduling, updates, and cancellations of meetings, and handles general inquiries or research requests.\n\n==================== OBJECTIVE ====================\n- Understand incoming emails and respond professionally, addressing sender by name {{ $('Process Email Data').item.json.name }}.  \n- Schedule, update, and cancel meetings within defined constraints.  \n- Suggest available slots without disclosing private meeting details.  \n- Automate booking on the calendar with proper details.  \n- Answer general inquiries or perform research as required.\n\n==================== CONTEXT ====================\n- Ghadeer requires efficient inbox and calendar management.  \n- Ensures professional, warm communication style.  \n- No disclosure of sensitive/private calendar details.  \n- Meetings only occur during working hours (9 AM – 5 PM, weekdays, Asia/Beirut timezone).  \n- Emails are always addressed to sender by name {{ $('Process Email Data').item.json.name }}, never email.  \n- Calendar slots must be accurate, conflict-free, and presented clearly.\n\n==================== STEP-BY-STEP PROCESS (SOP) ====================\n1. Read & Understand Email\n   - Parse sender name {{ $('Process Email Data').item.json.name }} , request, and intent.\n   - Classify as: meeting request, update, cancellation, general inquiry, or irrelevant/promotion email.\n\n2. If Meeting Request:\n   a. Use \"Calendar Get\" to fetch existing meetings.\n   b. Identify available slots (9:00–05:00, weekdays only, next 2 days unless specified).\n   c. Suggest 6-7 unique, conflict-free slots, make sure to get the preferred date and time:\n    - Monday, August 18, 2025: 10:00 – 11:00 AM\n- Monday, August 18, 2025: 11:00 – 12:00 PM\n- Monday, August 18, 2025: 12:00 – 01:00 PM\n- Monday, August 18, 2025: 01:00 – 02:00 PM\n- Monday, August 18, 2025: 02:00 – 03:00 PM\n- Monday, August 18, 2025: 03:00 – 04:00 PM\n- Monday, August 18, 2025: 04:00 – 05:00 PM\n- Tuesday, August 19, 2025: 2:00 – 3:00 PM\n   d. Wait for confirmation from {{ $('Process Email Data').item.json.name }}). Always use \"Think\" tool before send the message.\n   e. Once confirmed, use \"Calendar Create\" with:\n      - Start/End: ISO format, Asia/Beirut timezone.\n      - Summary: Short title based on email purpose (e.g., “Project Discussion”).\n      - Description: “Meeting scheduled via email” + optional purpose.\n      - Location: “Online Meeting.”\n      - Attendee: Sender’s email.\n   f. Confirm booking with all details + Google Calendar link.\n\n3. If Meeting Update:\n   - Use \"Calendar Get\" → find meeting → \"Calendar Update.\"\n   - Confirm updated details with {{ $('Process Email Data').item.json.name }}.\n\n4. If Meeting Cancellation:\n   - Use \"Calendar Get\" → find meeting → \"Calendar Delete.\"\n   - Confirm cancellation with {{ $('Process Email Data').item.json.name }}.\n\n5. If General Inquiry:\n   - Answer directly if simple.\n   - If research needed → use \"Perplexity Web Search.\"\n   - Always reply professionally and warmly using {{ $('Process Email Data').item.json.name }}.\n\n6. If Promotion / Irrelevant Email:\n   - Do NOT reply.\n   - Ignore or archive as appropriate.\n\n==================== INSTRUCTIONS (RULES & RESTRICTIONS) ====================\n- Always address sender by name {{ $('Process Email Data').item.json.name }}, never by email.  \n- Never disclose private meeting details.  \n- Only suggest weekdays, 9–5 (Asia/Beirut time).  \n- Default meeting duration: 60 minutes (ask if 30 preferred).  \n- All dates/times formatted in ISO for the calendar.  \n- Confirm every booking/update/cancellation with {{ $('Process Email Data').item.json.name }}.  \n- Keep tone professional, warm, and concise.  \n- Do not reply to irrelevant or promotional emails.\n\n==================== CRITICAL RULES & ERRORS TO AVOID ====================\n- NEVER schedule meetings on weekends.  \n- NEVER suggest times outside 9 AM – 5 PM.  \n- NEVER disclose sensitive data about existing meetings.  \n- NEVER reply to promotional or unrelated emails.  \n- ALWAYS check calendar availability before suggesting slots.  \n- ALWAYS format dates/times correctly (ISO, Asia/Beirut timezone).  \n- ALWAYS confirm meetings, updates, and cancellations with {{ $('Process Email Data').item.json.name }}.  \n- NEVER double-book or suggest overlapping slots.\n\n==================== TOOLS & SUBAGENTS ====================\n1. Calendar Get\n   - Use: Check existing events and find available slots.\n   - When: Before suggesting times, updates, or cancellations.\n\n2. Calendar Create\n   - Use: Book meetings.\n   - When: After sender confirms a suggested slot.\n\n3. Calendar Update\n   - Use: Modify details of an existing meeting.\n   - When: Sender requests changes.\n\n4. Calendar Delete\n   - Use: Cancel meetings.\n   - When: Sender requests cancellation.\n\n5. Perplexity Web Search\n   - Use: For research-based inquiries.\n   - When: Sender requests info beyond scheduling.\n6. Think tool\n   - Make sure there is no any weird issue in the message and fix it if there is any error.\n\n==================== EXAMPLES ====================\nCase 1: New Meeting Request\nEmail: \"Hi, can we have a call next week?\"\nResponse:\n\"Dear {{ $('Process Email Data').item.json.name }},\nI’d be glad to arrange that. Here are some available slots:\n- Monday, August 18, 2025: 10:00 – 11:00 AM\n- Monday, August 18, 2025: 11:00 – 12:00 PM\n- Monday, August 18, 2025: 12:00 – 01:00 PM\n- Monday, August 18, 2025: 01:00 – 02:00 PM\n- Monday, August 18, 2025: 02:00 – 03:00 PM\n- Monday, August 18, 2025: 03:00 – 04:00 PM\n- Monday, August 18, 2025: 04:00 – 05:00 PM\n- Tuesday, August 19, 2025: 2:00 – 3:00 PM\nPlease let me know which works best for you.\"\n\nCase 2: Confirmation\nEmail: \"Tuesday at 11 AM works.\"\nResponse:\n\"Dear {{ $('Process Email Data').item.json.name }},\nGreat! I’ve scheduled our meeting for Tuesday, August 19, 2025, at 11:00 AM (Asia/Beirut time). Here’s your calendar link: [Event Link].\nLooking forward to it!\"\n\nCase 3: Cancellation\nEmail: \"Can you cancel our meeting on Monday?\"\nResponse:\n\"Dear {{ $('Process Email Data').item.json.name }},\nYour meeting on Monday, August 18, 2025, has been canceled. Let me know if you’d like to reschedule.\"\n\nNote: If the email looks like a subscription, promotion, or newsletter (contains \"unsubscribe\", \"newsletter\", \"offer\", \"sale\", \"discount\", etc.), do not generate a reply.\n\n- If user asked about all or some of our services give him a breif summary from {{ $json.our_company_info }}\n"
         }
       },
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 2.2,
       "position": [
-        240,
-        224
+        736,
+        256
       ],
       "id": "31b05193-b326-4d72-9464-1083cb76a77a",
       "name": "AI Agent"
@@ -88,8 +88,8 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        720,
-        528
+        1040,
+        496
       ],
       "id": "0cc6241f-913a-4988-bcbe-1de850fad5a8",
       "name": "Calendar Get",
@@ -122,8 +122,8 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        880,
-        528
+        1200,
+        496
       ],
       "id": "cca7ebc8-bd00-472f-8351-8ab852a6b976",
       "name": "Calendar Create",
@@ -154,8 +154,8 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        1040,
-        528
+        1360,
+        496
       ],
       "id": "e1ab665d-3089-467c-8f2b-903898b51b78",
       "name": "Calendar Update",
@@ -183,8 +183,8 @@
       "type": "n8n-nodes-base.googleCalendarTool",
       "typeVersion": 1.3,
       "position": [
-        1200,
-        528
+        1520,
+        496
       ],
       "id": "a31acf4f-65ba-473e-ab94-e165284d7e97",
       "name": "Calendar Delete",
@@ -194,19 +194,6 @@
           "name": "Google Calendar account"
         }
       }
-    },
-    {
-      "parameters": {
-        "description": "Use the tool to think about what is needed to create a google calendar event or update it"
-      },
-      "type": "@n8n/n8n-nodes-langchain.toolThink",
-      "typeVersion": 1.1,
-      "position": [
-        1024,
-        1296
-      ],
-      "id": "2d8c0d14-b293-4e21-92e6-1159d47f3ca8",
-      "name": "Think"
     },
     {
       "parameters": {
@@ -222,8 +209,8 @@
       "type": "n8n-nodes-base.gmailTrigger",
       "typeVersion": 1.3,
       "position": [
-        -304,
-        224
+        48,
+        256
       ],
       "id": "56579e1a-2967-479e-908a-1e1a3bcfb905",
       "name": "Gmail Trigger",
@@ -241,8 +228,8 @@
       "type": "n8n-nodes-base.dateTime",
       "typeVersion": 2,
       "position": [
-        48,
-        224
+        384,
+        256
       ],
       "id": "9b382a47-857b-4d18-a873-4aeb7743d742",
       "name": "Date & Time"
@@ -252,7 +239,7 @@
         "operation": "reply",
         "messageId": "={{ $('Gmail Trigger').item.json.id }}",
         "emailType": "text",
-        "message": "={{ $json.output }}",
+        "message": "={{ $('AI Agent').item.json.output }}",
         "options": {
           "appendAttribution": false
         }
@@ -260,8 +247,8 @@
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        704,
-        224
+        1424,
+        288
       ],
       "id": "3d9480ce-f6a4-4392-a34b-686c88cf2dae",
       "name": "Send Gmail",
@@ -286,8 +273,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
       "typeVersion": 1.2,
       "position": [
-        80,
-        432
+        528,
+        448
       ],
       "id": "5dab9203-72e7-4dfa-83c1-06c3a4366f7e",
       "name": "OpenAI Model",
@@ -302,16 +289,664 @@
       "parameters": {
         "content": "",
         "height": 176,
-        "width": 656
+        "width": 960
       },
       "type": "n8n-nodes-base.stickyNote",
       "position": [
-        672,
-        512
+        816,
+        480
       ],
       "typeVersion": 1,
       "id": "12a6b683-4507-4847-96c0-cfac94a03f33",
       "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c11436b6-3190-4511-b414-2f759a3b1a79",
+              "leftValue": "={{ $json.isPromo }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1200,
+        256
+      ],
+      "id": "286afd7e-9cf8-4114-8658-e105a250aaea",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "jsCode": "// combine subject + snippet (short body preview)\nconst text = ($('Process Email Data').first().json.subject || \"\") + \" \" + ($('Gmail Trigger').first().json.snippet || \"\");\n\n// test against promo/subscription keywords\nconst isPromo = /unsubscribe|newsletter|opt[- ]?out|promo|sale|discount/i.test(text);\n\nreturn [{ json: {isPromo } }];\n"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        1024,
+        256
+      ],
+      "id": "21ce6bd8-6913-480f-a834-58eb84b4d99d",
+      "name": "Code"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        1424,
+        112
+      ],
+      "id": "7f9ca466-df3d-4146-8f7e-8ffc322dc0ca",
+      "name": "No Operation, do nothing"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "3a2ee469-96cb-4cff-acdf-63c4c9b6d09e",
+              "name": "our_company_info",
+              "value": "## KREATIVEBRAINS COMPANY INFO\nAt KreativeBrains, we empower startups and businesses with innovative, tailor-made digital solutions that drive real results. From modern web and mobile app development to powerful automation workflows and seamless user experiences — we help brands transform ideas into scalable, high-impact products.\n\n### WHAT WE DO\n- Custom Web & Mobile App Development\n- UI/UX Design with a user-first approach\n- Scalable Backend Systems & APIs\n- No-code/Low-code Automation (n8n, Make, Zapier)\n- E-commerce Solutions & CMS Integrations\n- Startup MVP Development & Technical Strategy\n\nHeadquartered online and powered by a passionate remote team, we’re not just developers — we’re thinkers, designers, builders, and partners in your growth. Whether you’re launching your next big idea or streamlining your digital operations, KreativeBrains is your trusted tech ally.\n\nWebsite: kreativebrains.com\nPhone: 76865719\nIndustry: Software Development\n\n## KREATIVEBRAINS SERVICES & PRICING\n\n### Informative Website\n- Description: Simple website with static pages (e.g., Home, About, Contact)\n- Starting Price: $500\n- Add-ons:\n  - SEO Optimization: On-page SEO setup for better search rankings ($100)\n\n### Informative Website with CMS\n- Description: Includes admin dashboard to manage content (e.g., blog, updates)\n- Starting Price: $1,000\n- Add-ons:\n  - Google Analytics: Track user behavior and website stats ($100)\n\n### Restaurant Menu Website\n- Description: Digital menu, item categories, image gallery, contact\n- Starting Price: $800\n- Add-ons:\n  - Multi-language Support: Add Arabic/English or other languages ($200)\n\n### Portfolio Website\n- Description: Showcase work or products\n- Starting Price: $500\n- Add-ons:\n  - Basic Animations: Page transitions, hover effects, smooth scrolling ($50)\n\n### Landing Page\n- Description: Single-page marketing site\n- Starting Price: $250\n- Add-ons:\n  - Advanced Animations (GSAP, Framer Motion): Engaging animations for modern feel ($100)\n\n### E-commerce Website\n- Description: Online store with products, cart, checkout, payment\n- Starting Price: $1,500\n- Add-ons:\n  - Payment Gateway Integration: Stripe, PayPal, local providers ($200)\n\n### Booking Website\n- Description: Appointments or reservations (e.g., salons, clinics)\n- Starting Price: $1,200\n- Add-ons:\n  - Push Notifications (for Apps): Real-time alerts to users' phones ($150)\n\n### Multi-page Business Website\n- Description: Professional site with multiple pages & functionalities\n- Starting Price: $900\n- Add-ons:\n  - QR Code Features: Generate or scan QR codes for interaction ($100)\n\n### Blog Website\n- Description: CMS to manage articles, categories, tags, authors\n- Starting Price: $600\n- Add-ons:\n  - Maintenance: Starting from $35/month up to $100/month depending on complexity\n\n### Real Estate Listing Website\n- Description: Property listings with filters, images, contact forms\n- Starting Price: $1,400\n- Add-ons:\n  - Special Offers: Websites > $2,000: free domain 1 year + 3 months maintenance\n\n### Internal Company System (ERP/Intranet)\n- Description: Tools for internal operations (HR, inventory, payroll)\n- Starting Price: $8,000\n- Add-ons:\n  - Websites > $5,000: 6 months free maintenance + free domain + 2 business emails\n\n### CRM System\n- Description: Manage clients, leads, follow-ups, sales pipelines\n- Starting Price: $5,000\n- Add-ons:\n  - Annual maintenance: 10% discount if paid yearly\n\n### Inventory Management System\n- Description: Manage products, stock, suppliers, alerts\n- Starting Price: $1,500\n- Notes: Payment 50% upfront, 50% on live\n\n### Learning Management System (LMS)\n- Description: Courses, quizzes, student dashboards\n- Starting Price: $4,000\n- Notes: Prices may vary based on project requirements\n\n### E-commerce with Vendor Dashboard\n- Description: Multi-vendor marketplace\n- Starting Price: $3,500\n\n### Restaurant Ordering System\n- Description: Online & on-site ordering, kitchen dashboard, analytics\n- Starting Price: $2,400\n\n### Informative App (Android + iOS)\n- Description: Company app with pages, news, contact\n- Starting Price: $1,000\n- Notes: Additional PlayStore/Apple Store fees apply\n\n### Mobile App with Admin Panel\n- Description: Full-featured app + dashboard\n- Starting Price: $3,000\n\n### Food Delivery App\n- Description: Restaurant menu, cart, checkout, order tracking\n- Starting Price: $3,500\n\n### On-Demand Service App\n- Description: Home services, appointments, real-time bookings\n- Starting Price: $4,600\n\n### E-commerce Mobile App\n- Description: Sell products via mobile\n- Starting Price: $2,200\n\n### Custom Business App\n- Description: Tailored solution for unique business logic\n- Starting Price: $2,000\n\n### Payment Terms & Notes\n- 50% payment before project start, 50% after going live (\"Production\")\n- Prices are estimates and may change according to project requirements\n",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        544,
+        256
+      ],
+      "id": "d4106799-b81f-4a2e-896d-b8fde3ab9d87",
+      "name": "Our Company"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "32f928ee-c6f6-44f9-961c-0a0124b62c1b",
+              "name": "Date and Time",
+              "value": "={{ $('Process Email Data').item.json.time }}",
+              "type": "string"
+            },
+            {
+              "id": "f6b33b69-60ea-456c-a1e3-3f2ee98b7e85",
+              "name": "Person Name",
+              "value": "={{ $('Process Email Data').item.json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "c6b85f73-d07c-4477-a74b-6e4a0af80f28",
+              "name": "Person Email",
+              "value": "={{ $('Process Email Data').item.json.from }}",
+              "type": "string"
+            },
+            {
+              "id": "1470c360-486f-4d45-82b8-ac47c4246e4d",
+              "name": "Email Subject",
+              "value": "={{ $('Process Email Data').item.json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "99a704a2-b909-4ee7-9b7e-45a0d2eb14fb",
+              "name": "Email Body",
+              "value": "={{ $('Process Email Data').item.json.Body }}",
+              "type": "string"
+            },
+            {
+              "id": "1f7cfc6f-86d7-4447-8a87-5797e4c6e992",
+              "name": "AI Message Sent",
+              "value": "={{ $('AI Agent').item.json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1616,
+        272
+      ],
+      "id": "3f560c2d-580c-475a-9805-1b6727851a6f",
+      "name": "Lead Information"
+    },
+    {
+      "parameters": {
+        "content": "## Output to Google Sheets",
+        "height": 512,
+        "width": 1152,
+        "color": 4
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        1808,
+        96
+      ],
+      "typeVersion": 1,
+      "id": "bb1484ae-9f1b-47bd-8c0c-3ce608a990e8",
+      "name": "Sticky Note5"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1WVk5BskF3ANZ2SWbNujXz-POBJB_CO36C1x2TVLU8sI/edit?gid=902505925#gid=902505925",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 30126831,
+          "mode": "list",
+          "cachedResultName": "Services",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WVk5BskF3ANZ2SWbNujXz-POBJB_CO36C1x2TVLU8sI/edit#gid=30126831"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date and Time",
+              "displayName": "Date and Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Person Name",
+              "displayName": "Person Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Person Email",
+              "displayName": "Person Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Subject",
+              "displayName": "Email Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Body",
+              "displayName": "Email Body",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI Message Sent",
+              "displayName": "AI Message Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "output",
+              "displayName": "output",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2768,
+        144
+      ],
+      "id": "d5fcb763-33ba-453a-80a2-ad9ef7351118",
+      "name": "Append row in Services sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xPVZIHRCjqGCej5C",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.toJsonString() }}",
+        "categories": {
+          "categories": [
+            {
+              "category": "Services",
+              "description": "If the user request any of our services like a website or an application or any"
+            },
+            {
+              "category": "Meetings",
+              "description": "If the user request a meeting or a call"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        2416,
+        272
+      ],
+      "id": "bd4513da-6db8-4261-aa1b-58f0318c0938",
+      "name": "Text Classifier"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "32f928ee-c6f6-44f9-961c-0a0124b62c1b",
+              "name": "Date and Time",
+              "value": "={{ $('Process Email Data').item.json.time }}",
+              "type": "string"
+            },
+            {
+              "id": "f6b33b69-60ea-456c-a1e3-3f2ee98b7e85",
+              "name": "Person Name",
+              "value": "={{ $('Process Email Data').item.json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "c6b85f73-d07c-4477-a74b-6e4a0af80f28",
+              "name": "Person Email",
+              "value": "={{ $('Process Email Data').item.json.from }}",
+              "type": "string"
+            },
+            {
+              "id": "1470c360-486f-4d45-82b8-ac47c4246e4d",
+              "name": "Email Subject",
+              "value": "={{ $('Process Email Data').item.json.subject }}",
+              "type": "string"
+            },
+            {
+              "id": "99a704a2-b909-4ee7-9b7e-45a0d2eb14fb",
+              "name": "Email Body",
+              "value": "={{ $('Process Email Data').item.json.Body }}",
+              "type": "string"
+            },
+            {
+              "id": "1f7cfc6f-86d7-4447-8a87-5797e4c6e992",
+              "name": "AI Message Sent",
+              "value": "={{ $('AI Agent').item.json.output }}",
+              "type": "string"
+            },
+            {
+              "id": "baca7302-6b6b-41d2-88a8-40b95bd8176e",
+              "name": "output.is_request_type",
+              "value": "={{ $json.output.is_request_type }}",
+              "type": "boolean"
+            },
+            {
+              "id": "8a0a7cf1-4af8-4022-a4d3-5a2c1f95c8cf",
+              "name": "output.request_type_details",
+              "value": "={{ $json.output.request_type_details }}",
+              "type": "string"
+            },
+            {
+              "id": "9f838383-9cff-4a1a-acdd-64b236c6cfda",
+              "name": "output.meeting_requested",
+              "value": "={{ $json.output.meeting_requested }}",
+              "type": "boolean"
+            },
+            {
+              "id": "cc4976a2-76e9-4da2-a17a-f0de9936b883",
+              "name": "output.meeting_reason",
+              "value": "={{ $json.output.meeting_reason }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        2272,
+        272
+      ],
+      "id": "2d338fbd-0959-47cd-9aa1-52121b1dbc37",
+      "name": "Lead Outcome"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        2416,
+        448
+      ],
+      "id": "bc89b227-7749-45ef-bcf2-a265913f1f78",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "F3zNVpXAudUkgtIX",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1WVk5BskF3ANZ2SWbNujXz-POBJB_CO36C1x2TVLU8sI/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WVk5BskF3ANZ2SWbNujXz-POBJB_CO36C1x2TVLU8sI/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Date and Time",
+              "displayName": "Date and Time",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Person Name",
+              "displayName": "Person Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Person Email",
+              "displayName": "Person Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Subject",
+              "displayName": "Email Subject",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Email Body",
+              "displayName": "Email Body",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "AI Message Sent",
+              "displayName": "AI Message Sent",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1840,
+        272
+      ],
+      "id": "66b8f6df-8a03-4322-a232-4bb9239292fa",
+      "name": "Add Data",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xPVZIHRCjqGCej5C",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1WVk5BskF3ANZ2SWbNujXz-POBJB_CO36C1x2TVLU8sI/edit?gid=902505925#gid=902505925",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 902505925,
+          "mode": "list",
+          "cachedResultName": "Meetings",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1WVk5BskF3ANZ2SWbNujXz-POBJB_CO36C1x2TVLU8sI/edit#gid=902505925"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2768,
+        384
+      ],
+      "id": "c3fab2e2-bf75-4cfc-82da-15b331452402",
+      "name": "Append row in Meetings Sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "xPVZIHRCjqGCej5C",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Review the following message before sending.\n- Fix grammar, spelling, and punctuation.\n- Improve clarity and remove awkward phrasing.\n- Ensure professional and consistent tone.\n- Keep formatting clean and readable.\n\nIf no corrections are needed, reply: \"Message is clear and ready to send.\"\nReturn only the corrected message.\n\nAdditional rules:\n- When the user asks about services, answer only about the services.\n- When the user asks about prices, provide only estimated prices.\n- Do not ask the user to book a meeting unless they explicitly request it, or only after they have asked about both services and prices.\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1.1,
+      "position": [
+        1648,
+        496
+      ],
+      "id": "fb12bfd4-c553-4f42-a023-ce8442b2af05",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-2.5-pro",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1584,
+        1760
+      ],
+      "id": "ec0a8c92-3290-44c2-88d0-b0f62e033387",
+      "name": "Google Gemini Chat Model1",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "zXUCYCxQkCHZO30S",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $('Process Email Data').item.json.toJsonString()}}",
+        "categories": {
+          "categories": [
+            {
+              "category": "isPromo",
+              "description": "isPromo is true if the email message sent by the user is about promotion, newsletter, subscription, discount or something similar"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.textClassifier",
+      "typeVersion": 1.1,
+      "position": [
+        1568,
+        1584
+      ],
+      "id": "43f76653-676d-4efc-a1c0-a650f41cf928",
+      "name": "Promo Classifier",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1984,
+        448
+      ],
+      "id": "54f23056-e1b2-44f8-bfcd-ff6662882410",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "zXUCYCxQkCHZO30S",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "text": "=Person Email Info:\n{{ $('Lead Information').item.json.toJsonString() }}\n\nOur Company Info:\n{{ $json.toJsonString() }}",
+        "attributes": {
+          "attributes": [
+            {
+              "name": "is_request_type",
+              "type": "boolean",
+              "description": "True if the AI detects the lead is requesting a specific service",
+              "required": true
+            },
+            {
+              "name": "request_type_details",
+              "description": "Explains the detected service (Website, Mobile App, Automation, Other). If didn't request any of our services just put NO SERVICE REQUESTED. - Example Values: \"Website\", \"Mobile App\", \"Automation\" or \"None\" or \"Not specified Yet\" ",
+              "required": true
+            },
+            {
+              "name": "meeting_requested",
+              "type": "boolean",
+              "description": "True if the lead requested a meeting   - Example Values: true / false",
+              "required": true
+            },
+            {
+              "name": "meeting_reason",
+              "description": "Explains why the lead wants a meeting or the motivation. If false just put NO MEETING REQUESTED. |- Example Values: \"Discuss a new website project\", \"Explore automation workflow\"",
+              "required": true
+            },
+            {
+              "name": "sales_draft",
+              "description": "You are an expert B2B sales assistant for KreativeBrains, specializing in custom websites, mobile apps, and automation workflows.  Goal: Write a short, friendly, and professional message to a lead who has shown interest in one of our services or requested a meeting. Highlight value, reference their request, and invite a next step.  ## Guidelines: - Personalization: Use the lead’s name if available. - Relevance: Focus on the service they requested (website, app, automation, etc.). - Value-driven: Briefly explain how KreativeBrains helps deliver results, simply and clearly. - Invitation: Suggest a low-commitment next step (quick call or meeting). - Tone: Professional, approachable, concise. - Length: 4–6 sentences, max 100 words.  ## Example style:  Hi [FirstName],  I noticed you’re interested in [Website / App / Automation] and may be looking to schedule a meeting. We’d be happy to help you build a solution that fits your needs and delivers real results.  If it works for you, we can set up a quick call to explore the options and next steps.  P.S. We focus on outcomes, not buzzwords — keeping things simple and effective.  ## Notes for AI: - Replace [FirstName] with lead’s name if available, otherwise use a friendly opener like \"Hello there\". - Replace [Website / App / Automation] with the service the lead requested or showed interest in. - Include a call-to-action for booking a meeting or discovery call."
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.informationExtractor",
+      "typeVersion": 1.2,
+      "position": [
+        1984,
+        272
+      ],
+      "id": "b3aa0f6b-4148-4b95-b96e-6692b62a5952",
+      "name": "Request Analyzer"
     }
   ],
   "pinData": {},
@@ -353,7 +988,7 @@
       "main": [
         [
           {
-            "node": "Send Gmail",
+            "node": "Code",
             "type": "main",
             "index": 0
           }
@@ -404,11 +1039,6 @@
         ]
       ]
     },
-    "Think": {
-      "ai_tool": [
-        []
-      ]
-    },
     "Gmail Trigger": {
       "main": [
         [
@@ -424,7 +1054,7 @@
       "main": [
         [
           {
-            "node": "AI Agent",
+            "node": "Our Company",
             "type": "main",
             "index": 0
           }
@@ -433,7 +1063,13 @@
     },
     "Send Gmail": {
       "main": [
-        []
+        [
+          {
+            "node": "Lead Information",
+            "type": "main",
+            "index": 0
+          }
+        ]
       ]
     },
     "OpenAI Model": {
@@ -446,13 +1082,164 @@
           }
         ]
       ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Our Company": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Information": {
+      "main": [
+        [
+          {
+            "node": "Add Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Outcome": {
+      "main": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Text Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text Classifier": {
+      "main": [
+        [
+          {
+            "node": "Append row in Services sheet",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Append row in Meetings Sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add Data": {
+      "main": [
+        [
+          {
+            "node": "Request Analyzer",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Promo Classifier",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Promo Classifier": {
+      "main": [
+        []
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Request Analyzer",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Request Analyzer": {
+      "main": [
+        [
+          {
+            "node": "Lead Outcome",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": true,
   "settings": {
     "executionOrder": "v1"
   },
-  "versionId": "07b12b3b-1272-4229-98db-e39b85ff1029",
+  "versionId": "a3011af9-e550-4fe5-9d3d-794f6eb9cfa9",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "5b0e6a67cedc76556280fadf3adbc87df9618178e64ce10410dd16f182411baf"
