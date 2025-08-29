@@ -1,4 +1,4 @@
-# Email Agent Workflow Assistant
+# Email Agent Workflow with n8n
 
 This project is an **Email Workflow Assistant** built using **[n8n](https://n8n.io/)**.  
 It acts as an **AI-powered personal email assistant** to handle messages, reply automatically, perform **live web searches via Perplexity AI**, manage Google Calendar events, log interactions into Google Sheets, and enforce strict business boundaries.
